@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 
@@ -9,21 +10,9 @@ const track = require('./api/routes/track');
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-//Coors error solved
-app.use((req, res, next ) =>{
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if(req.method == "OPTIONS"){
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE');
-        return res.status(200).json({});
-    }
-    next();
-});
-
-app.use('/endpoint.com/all_tracks', tracks);
-app.use('/endpoint.com/track', track);
-
+app.use(express.static(path.join(__dirname, '../FrontEnd/build')));
+app.use('/all_tracks', tracks);
+app.use('/track', track);
  
 app.use((req, res, next ) =>{
     const error = new Error('Not found');
